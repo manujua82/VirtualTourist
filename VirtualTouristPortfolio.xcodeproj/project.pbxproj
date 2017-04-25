@@ -13,6 +13,7 @@
 		95F2D4661EAF7C3000C26A82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4651EAF7C3000C26A82 /* Assets.xcassets */; };
 		95F2D4691EAF7C3000C26A82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4671EAF7C3000C26A82 /* LaunchScreen.storyboard */; };
 		95F2D4761EAF833400C26A82 /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4741EAF833400C26A82 /* VirtualTourist.xcdatamodeld */; };
+		95F2D4781EAF892600C26A82 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4771EAF892600C26A82 /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		95F2D4681EAF7C3000C26A82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95F2D46A1EAF7C3000C26A82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95F2D4751EAF833400C26A82 /* VirtualTourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VirtualTourist.xcdatamodel; sourceTree = "<group>"; };
+		95F2D4771EAF892600C26A82 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				95F2D4741EAF833400C26A82 /* VirtualTourist.xcdatamodeld */,
+				95F2D4771EAF892600C26A82 /* CoreDataStack.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				95F2D4611EAF7C3000C26A82 /* ViewController.swift in Sources */,
 				95F2D45F1EAF7C3000C26A82 /* AppDelegate.swift in Sources */,
 				95F2D4761EAF833400C26A82 /* VirtualTourist.xcdatamodeld in Sources */,
+				95F2D4781EAF892600C26A82 /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
