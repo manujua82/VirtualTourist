@@ -12,6 +12,7 @@
 		95F2D4641EAF7C3000C26A82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4621EAF7C3000C26A82 /* Main.storyboard */; };
 		95F2D4661EAF7C3000C26A82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4651EAF7C3000C26A82 /* Assets.xcassets */; };
 		95F2D4691EAF7C3000C26A82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4671EAF7C3000C26A82 /* LaunchScreen.storyboard */; };
+		95F2D4761EAF833400C26A82 /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4741EAF833400C26A82 /* VirtualTourist.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		95F2D4651EAF7C3000C26A82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		95F2D4681EAF7C3000C26A82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		95F2D46A1EAF7C3000C26A82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		95F2D4751EAF833400C26A82 /* VirtualTourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VirtualTourist.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 		95F2D4731EAF804500C26A82 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				95F2D4741EAF833400C26A82 /* VirtualTourist.xcdatamodeld */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -171,6 +174,7 @@
 			files = (
 				95F2D4611EAF7C3000C26A82 /* ViewController.swift in Sources */,
 				95F2D45F1EAF7C3000C26A82 /* AppDelegate.swift in Sources */,
+				95F2D4761EAF833400C26A82 /* VirtualTourist.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,6 +340,19 @@
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		95F2D4741EAF833400C26A82 /* VirtualTourist.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				95F2D4751EAF833400C26A82 /* VirtualTourist.xcdatamodel */,
+			);
+			currentVersion = 95F2D4751EAF833400C26A82 /* VirtualTourist.xcdatamodel */;
+			path = VirtualTourist.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 95F2D4531EAF7C3000C26A82 /* Project object */;
 }
