@@ -112,11 +112,14 @@ extension TravelLocationsViewController: MKMapViewDelegate{
         UserDefaults.standard.set(coordinate, forKey: "coordinate")
     }
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    
+    /*func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         print("view for annotation")
+        
         if annotation is MKUserLocation {
             return nil
         }
+        
         
         let reuseID = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseID) as? MKPinAnnotationView
@@ -126,14 +129,50 @@ extension TravelLocationsViewController: MKMapViewDelegate{
             pinView!.canShowCallout = true
             pinView!.animatesDrop = true
         }
+        
+        self.mapView.deselectAnnotation(annotation, animated: false)
         return pinView
-    }
+    }*/
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        print("didSlect")
+        
+        var pin: Pin?
+        
+        let coordinate = view.annotation?.coordinate
+        let pins = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        pins.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true),
+                                NSSortDescriptor(key: "longitude", ascending: false)]
+        
+        let pred = NSPredicate(format: "latitude = %@ AND longitude = %@", argumentArray: [coordinate?.latitude, coordinate?.longitude])
+        pins.predicate = pred
         
         
+        // Create FetchedResultsController
+        let fc = NSFetchedResultsController(fetchRequest: pins, managedObjectContext:fetchedResultsController!.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        do {
+            try fc.performFetch()
+            if((fc.fetchedObjects?.count)! > 0 ){
+                pin = fc.fetchedObjects?[0] as? Pin
+            }
+            
+        } catch let e as NSError {
+            print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            return
+        }
+        
+        
+        if isDeletePin {
+            self.mapView.removeAnnotation(view.annotation!)
+            fetchedResultsController!.managedObjectContext.delete(pin!)
+        }
+
     }
+    
+    
+    
 }
 
 
@@ -144,10 +183,6 @@ extension TravelLocationsViewController: UIGestureRecognizerDelegate {
     func configureMap(){
         
         mapView.delegate = self
-        
-        mapView.isRotateEnabled = true
-        mapView.isPitchEnabled = true
-        mapView.isZoomEnabled = true
         
         // Set Region
         if let coordinate = UserDefaults.standard.dictionary(forKey: "coordinate") {
@@ -179,15 +214,16 @@ extension TravelLocationsViewController: UIGestureRecognizerDelegate {
     
     func handleLongPress(_ gestureReconizer: UILongPressGestureRecognizer) {
         
-        if gestureReconizer.state != UIGestureRecognizerState.ended {
-            return
+        if !isDeletePin{
+            if gestureReconizer.state != UIGestureRecognizerState.ended {
+                return
+            }
+        
+            let location = gestureReconizer.location(in: self.mapView)
+            let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+        
+            let _ = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: self.fetchedResultsController!.managedObjectContext)
         }
-        
-        let location = gestureReconizer.location(in: self.mapView)
-        let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        
-        let _ = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: self.fetchedResultsController!.managedObjectContext)
-        
     }
 }
 
@@ -210,16 +246,23 @@ extension TravelLocationsViewController: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
-        switch(type) {
-        case .insert:
-            let pinCoordinate = controller.object(at: newIndexPath!) as! Pin
-            let annotation = MKPointAnnotation()
-            //let annotation = MKPinAnnotationView()
-            
-            annotation.coordinate = CLLocationCoordinate2D(latitude: pinCoordinate.latitude, longitude: pinCoordinate.longitude)
-            mapView.addAnnotation(annotation)
-        default:
-            break
+        DispatchQueue.main.async{
+            switch(type) {
+                case .insert:
+                    
+                    let pinCoordinate = controller.object(at: newIndexPath!) as! Pin
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = CLLocationCoordinate2D(latitude: pinCoordinate.latitude, longitude: pinCoordinate.longitude)
+
+                    self.mapView.addAnnotation(annotation)
+                    self.mapView.deselectAnnotation(annotation, animated: false)
+                case .delete:
+                    let pinCoordinate = anObject as! Pin
+                    let coordinate = CLLocationCoordinate2D(latitude: pinCoordinate.latitude, longitude: pinCoordinate.longitude)
+                    //self.mapView.removeAnnotation(annotation)
+                default:
+                    break
+            }
         }
     }
 }

@@ -74,11 +74,31 @@
                         <outlet property="editButton" destination="ias-f6-yna" id="HJc-eA-3Xx"/>
                         <outlet property="editLabel" destination="QcN-nj-ZmX" id="VND-YD-aJZ"/>
                         <outlet property="mapView" destination="3tT-r9-cwk" id="Dzr-iM-4hZ"/>
+                        <segue destination="qeh-7h-bu7" kind="show" identifier="PhotoAlbum" id="nMK-f7-WSf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bUi-iF-Hk1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="864.79999999999995" y="232.53373313343329"/>
+        </scene>
+        <!--Title-->
+        <scene sceneID="gmT-db-N8l">
+            <objects>
+                <viewController id="qeh-7h-bu7" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pKc-vi-O89"/>
+                        <viewControllerLayoutGuide type="bottom" id="ytn-nT-P14"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="SS5-2D-7WF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="jRV-7Z-F5q"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="raB-FY-rzN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1714" y="233"/>
         </scene>
     </scenes>
 </document>
