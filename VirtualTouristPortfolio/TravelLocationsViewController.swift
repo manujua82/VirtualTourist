@@ -61,7 +61,16 @@ class TravelLocationsViewController: UIViewController {
                 })
             }
         }
-
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier! == "photoAlbum" {
+            
+            if let albumViewController = segue.destination as? PhotoAlbumViewController {
+                
+                
+            }
+        }
     }
 }
 
@@ -167,11 +176,10 @@ extension TravelLocationsViewController: MKMapViewDelegate{
         if isDeletePin {
             self.mapView.removeAnnotation(view.annotation!)
             fetchedResultsController!.managedObjectContext.delete(pin!)
+        }else{
+            self.performSegue(withIdentifier: "PhotoAlbum", sender: self)
         }
-
     }
-    
-    
     
 }
 
