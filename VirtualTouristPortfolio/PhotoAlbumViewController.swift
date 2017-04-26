@@ -56,24 +56,6 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     }
     
     
-    /*func downloadAlbum(){
-        FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
-            
-            if let error = error{
-                print("Something is wrong with download: \(error.description)")
-            }else{
-                print("Downloaded photos:  \(result?.count)")
-                
-                let stack = self.delegate.stack
-                
-                stack.performBackgroundBatchOperation({ (workerContext) in
-                    Photo.photosFromResults(result!, pin: self.pin!, context: stack.context)
-                    
-                })
-            }
-        })
-    }*/
-    
     
     func downloadImages(){
         
@@ -86,62 +68,26 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 
                 
                 if (result?.count)! > 0 {
-                    
+                
                     stack.performBackgroundBatchOperation({ (workerContext) in
-                        
-                        
-                        /*var pin_select: Pin?
-                        let pins = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-                        pins.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true),
-                                                NSSortDescriptor(key: "longitude", ascending: false)]
-                        
-                        let pred = NSPredicate(format: "latitude = %@ AND longitude = %@", argumentArray: [self.pin?.latitude, self.pin?.longitude])
-                        pins.predicate = pred
-                        
-                        
-                        // Create FetchedResultsController
-                        let fc = NSFetchedResultsController(fetchRequest: pins, managedObjectContext:workerContext, sectionNameKeyPath: nil, cacheName: nil)
-                        
-                        do {
-                            try fc.performFetch()
-                            if((fc.fetchedObjects?.count)! > 0 ){
-                                pin_select = fc.fetchedObjects?[0] as? Pin
-                            }
+                        let placeHolder  = UIImage(named: "placeholder")
+                        let data = UIImagePNGRepresentation(placeHolder!)! as NSData
+                        var photos = [Photo]()
+                    
+                        for photoFlickr in result! {
                             
-                        } catch let e as NSError {
-                            print("Error while trying to perform a search: ")
-                        }*/
-                        
+                            guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                                return
+                            }
+                            let imageWithPlaceHolder = Photo(photoData: data, photoUrl: imageURLString, context: stack.context)
+                            imageWithPlaceHolder.pin = self.pin!
+                            photos.append(imageWithPlaceHolder)
+                        }
 
-                        Photo.photosFromResults(result!, pin: self.pin!, context: stack.context)
                         
                     })
                 }
-                    /*var numberOfImages = result?.count
-                    let placeHolder  = UIImage(named: "placeholder")
-                    let data = UIImagePNGRepresentation(placeHolder!)! as NSData
-                    
-                    var photos = [Photo]()
-                    //var arrayOfImagesToDownload =  [Photo]()
-                    stack.performBackgroundBatchOperation({ (workerContext) in
-                    
-                        repeat
-                        {
-                            let imageWithPlaceHolder = Photo(photoData: data, context: stack.context)
-                            imageWithPlaceHolder.pin = self.pin!
-                            
-                        
-                            photos.append(imageWithPlaceHolder)
-                            //arrayOfImagesToDownload.append(imageWithPlaceHolder)
-                            numberOfImages = numberOfImages! - 1
-                        }while numberOfImages! > 0
-                    })
-                    
-                    
-                    print("Qty of photos: \(photos.count)")
-                    //Photo.downloadImages(from: result!, withPin: self.pin!, to: arrayOfImagesToDownload)
-                }*/
-
+                
             }
             
         })
@@ -161,7 +107,6 @@ extension PhotoAlbumViewController {
         
         return cell
     }
-    
 }
 
 

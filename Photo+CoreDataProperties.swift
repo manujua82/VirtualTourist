@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  VirtualTouristPortfolio
 //
-//  Created by Juan Salcedo on 4/25/17.
+//  Created by Kevin Bilberry on 4/26/17.
 //  Copyright © 2017 Juan Salcedo. All rights reserved.
 //
 
@@ -17,6 +17,7 @@ extension Photo {
     }
 
     @NSManaged public var photoData: NSData?
+    @NSManaged public var url: String?
     @NSManaged public var pin: Pin?
 
 }
