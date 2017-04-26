@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import CoreData
 
 @objc(Photo)
@@ -21,16 +22,16 @@ public class Photo: NSManagedObject {
         }
     }
     
-    static func dataImageFrom(result: [String:AnyObject])->NSData?{
+    static func dataImageFrom(dictionary: [String:AnyObject])->NSData?{
         
         /* GUARD: Does our photo have a key for 'url_m'? */
-        guard let imageURLString = result[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+        guard let imageUrlString = dictionary[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
             return nil
         }
         
         // if an image exists at the url, set the image and title
-        let imageUrl = URL(string: imageURLString)
-        guard let imageData = try? Data(contentsOf: imageUrl!) else{
+        let imageURL = URL(string: imageUrlString)
+        guard let imageData = try? Data(contentsOf: imageURL!) else{
             return nil
         }
         return imageData as NSData
@@ -39,17 +40,30 @@ public class Photo: NSManagedObject {
     
 
     
+
+    
     static func photosFromResults(_ results: [[String:AnyObject]], pin: Pin,context: NSManagedObjectContext) {
         
-        for result in results {
-            guard let imageData = dataImageFrom(result: result) else {
+        let placeHolder  = UIImage(named: "placeholder")
+        let data = UIImagePNGRepresentation(placeHolder!)! as NSData
+        var photos = [Photo]()
+        
+        for _ in results {
+            let imageWithPlaceHolder = Photo(photoData: data, context: context)
+            imageWithPlaceHolder.pin = pin
+            photos.append(imageWithPlaceHolder)
+        }
+        
+        print ("caantidad de imagenes: \(photos.count)")
+        
+        let enumaratedDict = results.enumerated()
+        for imageDic in enumaratedDict {
+            guard let imageData = dataImageFrom(dictionary: imageDic.element) else {
                 continue
             }
             
-            let photo = Photo(photoData: imageData, context: context)
-            photo.pin = pin
+            let imageFromIndexInImages = photos[imageDic.offset]
+            imageFromIndexInImages.photoData = imageData
         }
-        
     }
-
 }

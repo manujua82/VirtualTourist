@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "VirtualTouristPortfolio/PhotoAlbumViewController.swift"
-            timestampString = "514860849.219672"
+            filePath = "Photo+CoreDataClass.swift"
+            timestampString = "514908440.270437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153"
-            landmarkName = "controller(_:didChange:atSectionIndex:for:)"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "dataImageFrom(dictionary:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

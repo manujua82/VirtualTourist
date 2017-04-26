@@ -137,6 +137,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="yyH-ib-t7A"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="New Collection"/>
                             </button>
                         </subviews>
@@ -155,7 +156,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="collectionView" destination="YcA-T8-YYo" id="8bZ-8g-frY"/>
+                        <outlet property="collectionView" destination="YcA-T8-YYo" id="Hd8-kf-ejh"/>
                         <outlet property="mapView" destination="Sdf-WV-RFM" id="KGm-kt-1ku"/>
                     </connections>
                 </viewController>

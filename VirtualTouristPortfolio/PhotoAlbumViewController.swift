@@ -10,23 +10,12 @@ import UIKit
 import MapKit
 import CoreData
 
-class PhotoAlbumViewController: UIViewController {
+class PhotoAlbumViewController: CoreDataCollectionViewController {
 
     
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var collectionView: UICollectionView!
-    
-    var blockOperations: [BlockOperation] = []
     
     var pin: Pin?
-    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?{
-        didSet{
-            // Whenever the frc changes, we execute the search and
-            fetchedResultsController?.delegate = self
-            executeSearch()
-        }
-    }
-    
     let delegate = UIApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
@@ -41,10 +30,11 @@ class PhotoAlbumViewController: UIViewController {
         
         print("photos: \(album.count)")
         if album.count == 0 {
-            downloadAlbum()
+            downloadImages()
         }
     }
-
+    
+   
     func configureMap(){
         
         mapView.isScrollEnabled = false
@@ -65,7 +55,8 @@ class PhotoAlbumViewController: UIViewController {
         self.mapView.addAnnotation(annotation)
     }
     
-    func downloadAlbum(){
+    
+    /*func downloadAlbum(){
         FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
             
             if let error = error{
@@ -81,49 +72,86 @@ class PhotoAlbumViewController: UIViewController {
                 })
             }
         })
-    }
-
+    }*/
     
-
     
-}
+    func downloadImages(){
+        
+        FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
+            
+            if let error = error{
+                print("Something is wrong with download: \(error.description)")
+            }else{
+                let stack = self.delegate.stack
+                
+                
+                if (result?.count)! > 0 {
+                    
+                    stack.performBackgroundBatchOperation({ (workerContext) in
+                        
+                        
+                        /*var pin_select: Pin?
+                        let pins = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+                        pins.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true),
+                                                NSSortDescriptor(key: "longitude", ascending: false)]
+                        
+                        let pred = NSPredicate(format: "latitude = %@ AND longitude = %@", argumentArray: [self.pin?.latitude, self.pin?.longitude])
+                        pins.predicate = pred
+                        
+                        
+                        // Create FetchedResultsController
+                        let fc = NSFetchedResultsController(fetchRequest: pins, managedObjectContext:workerContext, sectionNameKeyPath: nil, cacheName: nil)
+                        
+                        do {
+                            try fc.performFetch()
+                            if((fc.fetchedObjects?.count)! > 0 ){
+                                pin_select = fc.fetchedObjects?[0] as? Pin
+                            }
+                            
+                        } catch let e as NSError {
+                            print("Error while trying to perform a search: ")
+                        }*/
+                        
 
-extension PhotoAlbumViewController {
-    
-    func executeSearch() {
-        if let fc = fetchedResultsController {
-            do {
-                try fc.performFetch()
-                print("fc cnt: \(fc.fetchedObjects?.count)")
-            } catch let e as NSError {
-                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+                        Photo.photosFromResults(result!, pin: self.pin!, context: stack.context)
+                        
+                    })
+                }
+                    /*var numberOfImages = result?.count
+                    let placeHolder  = UIImage(named: "placeholder")
+                    let data = UIImagePNGRepresentation(placeHolder!)! as NSData
+                    
+                    var photos = [Photo]()
+                    //var arrayOfImagesToDownload =  [Photo]()
+                    stack.performBackgroundBatchOperation({ (workerContext) in
+                    
+                        repeat
+                        {
+                            let imageWithPlaceHolder = Photo(photoData: data, context: stack.context)
+                            imageWithPlaceHolder.pin = self.pin!
+                            
+                        
+                            photos.append(imageWithPlaceHolder)
+                            //arrayOfImagesToDownload.append(imageWithPlaceHolder)
+                            numberOfImages = numberOfImages! - 1
+                        }while numberOfImages! > 0
+                    })
+                    
+                    
+                    print("Qty of photos: \(photos.count)")
+                    //Photo.downloadImages(from: result!, withPin: self.pin!, to: arrayOfImagesToDownload)
+                }*/
+
             }
-        }
-    }
+            
+        })
+    } 
 }
-
-
 
 // MARK: - PhotoAlbumViewController (Collection Data Source)
-extension PhotoAlbumViewController:  UICollectionViewDataSource, UICollectionViewDelegate {
+extension PhotoAlbumViewController {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if let fc = fetchedResultsController {
-            return (fc.sections?.count)!
-        } else {
-            return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let fc = fetchedResultsController {
-            return fc.sections![section].numberOfObjects
-        } else {
-            return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCell", for: indexPath) as! PhotoAlbumCollectionViewCell
         
@@ -136,48 +164,6 @@ extension PhotoAlbumViewController:  UICollectionViewDataSource, UICollectionVie
     
 }
 
-
-// MARK: - PhotoAlbumViewController: (Fetches)
-
-extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        //tableView.beginUpdates()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        
-        DispatchQueue.main.async {
-            let set = IndexSet(integer: sectionIndex)
-        
-            switch (type) {
-            case .insert:
-                self.collectionView.insertSections(set)
-            case .delete:
-                self.collectionView.deleteSections(set)
-                //tableView.deleteSections(set, with: .fade)
-            default:
-                // irrelevant in our case
-                break
-            }
-        }
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        /*DispatchQueue.main.async {
-            switch(type) {
-                case .insert:
-                    self.collectionView.insertItems(at: [newIndexPath!])
-                default: break
-            
-            }
-        }*/
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        //tableView.endUpdates()
-    }
-
-}
 
 
 

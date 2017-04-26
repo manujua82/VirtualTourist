@@ -22,6 +22,7 @@
 		95F2D48F1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D48E1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift */; };
 		95F2D4931EB019BD00C26A82 /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4911EB019BD00C26A82 /* FlickrClient.swift */; };
 		95F2D4941EB019BD00C26A82 /* FlickrConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4921EB019BD00C26A82 /* FlickrConstants.swift */; };
+		95F2D4961EB0C5AD00C26A82 /* CoreDataCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4951EB0C5AD00C26A82 /* CoreDataCollectionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		95F2D48E1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		95F2D4911EB019BD00C26A82 /* FlickrClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrClient.swift; sourceTree = "<group>"; };
 		95F2D4921EB019BD00C26A82 /* FlickrConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrConstants.swift; sourceTree = "<group>"; };
+		95F2D4951EB0C5AD00C26A82 /* CoreDataCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataCollectionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 				95F2D48A1EAF924F00C26A82 /* TravelLocationsViewController.swift */,
 				95F2D48C1EB0097C00C26A82 /* PhotoAlbumViewController.swift */,
 				95F2D48E1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift */,
+				95F2D4951EB0C5AD00C26A82 /* CoreDataCollectionViewController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				95F2D4931EB019BD00C26A82 /* FlickrClient.swift in Sources */,
 				95F2D4781EAF892600C26A82 /* CoreDataStack.swift in Sources */,
 				95F2D48B1EAF924F00C26A82 /* TravelLocationsViewController.swift in Sources */,
+				95F2D4961EB0C5AD00C26A82 /* CoreDataCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
