@@ -74,7 +74,7 @@
                         <outlet property="editButton" destination="ias-f6-yna" id="HJc-eA-3Xx"/>
                         <outlet property="editLabel" destination="QcN-nj-ZmX" id="VND-YD-aJZ"/>
                         <outlet property="mapView" destination="3tT-r9-cwk" id="Dzr-iM-4hZ"/>
-                        <segue destination="qeh-7h-bu7" kind="show" identifier="PhotoAlbum" id="nMK-f7-WSf"/>
+                        <segue destination="qeh-7h-bu7" kind="show" identifier="photoAlbum" id="nMK-f7-WSf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bUi-iF-Hk1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -109,7 +109,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="X96-Ah-Zfn" customClass="PhotoAlbumCollectionViewCell" customModule="VirtualTouristPortfolio" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoAlbumCell" id="X96-Ah-Zfn" customClass="PhotoAlbumCollectionViewCell" customModule="VirtualTouristPortfolio" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="91" height="75"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

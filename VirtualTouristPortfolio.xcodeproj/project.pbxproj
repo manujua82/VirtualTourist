@@ -20,6 +20,8 @@
 		95F2D48B1EAF924F00C26A82 /* TravelLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D48A1EAF924F00C26A82 /* TravelLocationsViewController.swift */; };
 		95F2D48D1EB0097C00C26A82 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D48C1EB0097C00C26A82 /* PhotoAlbumViewController.swift */; };
 		95F2D48F1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D48E1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift */; };
+		95F2D4931EB019BD00C26A82 /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4911EB019BD00C26A82 /* FlickrClient.swift */; };
+		95F2D4941EB019BD00C26A82 /* FlickrConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D4921EB019BD00C26A82 /* FlickrConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		95F2D48A1EAF924F00C26A82 /* TravelLocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TravelLocationsViewController.swift; sourceTree = "<group>"; };
 		95F2D48C1EB0097C00C26A82 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		95F2D48E1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
+		95F2D4911EB019BD00C26A82 /* FlickrClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrClient.swift; sourceTree = "<group>"; };
+		95F2D4921EB019BD00C26A82 /* FlickrConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +114,7 @@
 		95F2D4731EAF804500C26A82 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				95F2D4901EB0198300C26A82 /* Flickr */,
 				95F2D4791EAF8AB900C26A82 /* VirtualTourist */,
 			);
 			name = Model;
@@ -126,6 +131,15 @@
 				95F2D4741EAF833400C26A82 /* VirtualTourist.xcdatamodeld */,
 			);
 			name = VirtualTourist;
+			sourceTree = "<group>";
+		};
+		95F2D4901EB0198300C26A82 /* Flickr */ = {
+			isa = PBXGroup;
+			children = (
+				95F2D4911EB019BD00C26A82 /* FlickrClient.swift */,
+				95F2D4921EB019BD00C26A82 /* FlickrConstants.swift */,
+			);
+			name = Flickr;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,10 +219,12 @@
 				95F2D48F1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				95F2D4871EAF8B6300C26A82 /* Pin+CoreDataProperties.swift in Sources */,
 				95F2D48D1EB0097C00C26A82 /* PhotoAlbumViewController.swift in Sources */,
+				95F2D4941EB019BD00C26A82 /* FlickrConstants.swift in Sources */,
 				95F2D4861EAF8B6300C26A82 /* Pin+CoreDataClass.swift in Sources */,
 				95F2D45F1EAF7C3000C26A82 /* AppDelegate.swift in Sources */,
 				95F2D4761EAF833400C26A82 /* VirtualTourist.xcdatamodeld in Sources */,
 				95F2D4891EAF8B6300C26A82 /* Photo+CoreDataProperties.swift in Sources */,
+				95F2D4931EB019BD00C26A82 /* FlickrClient.swift in Sources */,
 				95F2D4781EAF892600C26A82 /* CoreDataStack.swift in Sources */,
 				95F2D48B1EAF924F00C26A82 /* TravelLocationsViewController.swift in Sources */,
 			);

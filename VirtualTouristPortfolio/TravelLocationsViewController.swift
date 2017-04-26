@@ -17,6 +17,8 @@ class TravelLocationsViewController: UIViewController {
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var editLabel: UILabel!
     
+    var coordinate: CLLocationCoordinate2D?
+    
     
     let delegate = UIApplication.shared.delegate as! AppDelegate
     var isDeletePin = false
@@ -63,16 +65,7 @@ class TravelLocationsViewController: UIViewController {
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier! == "photoAlbum" {
-            
-            if let albumViewController = segue.destination as? PhotoAlbumViewController {
-                
-                
-            }
-        }
     }
-}
 
 //MARK: TravelLocationsViewController: (MKMapViewDelegate)
 
@@ -106,8 +99,59 @@ extension TravelLocationsViewController: MKMapViewDelegate{
             }
         }
     }
+    
+    
+    func getPinSelect(latitude: Double, longitude: Double) -> Pin{
+        var pin: Pin?
+        let pins = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        pins.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true),
+                                NSSortDescriptor(key: "longitude", ascending: false)]
+        
+        let pred = NSPredicate(format: "latitude = %@ AND longitude = %@", argumentArray: [latitude, longitude])
+        pins.predicate = pred
+        
+        
+        // Create FetchedResultsController
+        let fc = NSFetchedResultsController(fetchRequest: pins, managedObjectContext:fetchedResultsController!.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        
+        do {
+            try fc.performFetch()
+            if((fc.fetchedObjects?.count)! > 0 ){
+                pin = fc.fetchedObjects?[0] as? Pin
+            }
+            
+        } catch let e as NSError {
+            print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+        }
+        
+        return pin!
+        
+    }
 
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier! == "photoAlbum" {
+            
+            if let controller = segue.destination as? PhotoAlbumViewController {
+                
+                let pin = getPinSelect(latitude: (self.coordinate?.latitude)!, longitude: (self.coordinate?.longitude)!)
+                
+                // Create a fetchrequest
+                let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+                fr.sortDescriptors = [NSSortDescriptor(key: "photoData", ascending: false)]
+                
+                // Create the FetchedResultsController
+                let pred = NSPredicate(format: "pin = %@", argumentArray: [pin])
+                fr.predicate = pred
+                
+                let fc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext:fetchedResultsController!.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+                
+                controller.pin = pin
+                controller.fetchedResultsController = fc
+                
+            }
+        }
+    }
     
     //Get the center location coordinate
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -177,7 +221,8 @@ extension TravelLocationsViewController: MKMapViewDelegate{
             self.mapView.removeAnnotation(view.annotation!)
             fetchedResultsController!.managedObjectContext.delete(pin!)
         }else{
-            self.performSegue(withIdentifier: "PhotoAlbum", sender: self)
+            self.coordinate = view.annotation?.coordinate
+            self.performSegue(withIdentifier: "photoAlbum", sender: self)
         }
     }
     
