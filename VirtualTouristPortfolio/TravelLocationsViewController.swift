@@ -19,7 +19,7 @@ class TravelLocationsViewController: UIViewController {
     
     var coordinate: CLLocationCoordinate2D?
     
-    
+    var droppedPin : Pin!
     let delegate = UIApplication.shared.delegate as! AppDelegate
     var isDeletePin = false
     var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?{
@@ -44,28 +44,23 @@ class TravelLocationsViewController: UIViewController {
     
     @IBAction func editPressed(_ sender: Any) {
         
-        if (UIDevice.current.orientation != UIDeviceOrientation.landscapeLeft) &&
-            (UIDevice.current.orientation != UIDeviceOrientation.landscapeRight) {
-            
-            if !isDeletePin{
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.mapView.frame.origin.y -= self.editLabel.frame.height
-                    self.editLabel.frame.origin.y -= self.editLabel.frame.height
-                    self.isDeletePin = true
-                    self.editButton.title = "Done"
-                })
-            }else{
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.mapView.frame.origin.y += self.editLabel.frame.height
-                    self.editLabel.frame.origin.y += self.editLabel.frame.height
-                    self.isDeletePin = false
-                    self.editButton.title = "Edit"
-                })
-            }
+        if !isDeletePin{
+            UIView.animate(withDuration: 0.2, animations: {
+                self.mapView.frame.origin.y -= self.editLabel.frame.height
+                self.editLabel.frame.origin.y -= self.editLabel.frame.height
+                self.isDeletePin = true
+                self.editButton.title = "Done"
+            })
+        }else{
+            UIView.animate(withDuration: 0.2, animations: {
+                self.mapView.frame.origin.y += self.editLabel.frame.height
+                self.editLabel.frame.origin.y += self.editLabel.frame.height
+                self.isDeletePin = false
+                self.editButton.title = "Edit"
+            })
         }
     }
-    
-    }
+}
 
 //MARK: TravelLocationsViewController: (MKMapViewDelegate)
 
@@ -220,6 +215,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
         if isDeletePin {
             self.mapView.removeAnnotation(view.annotation!)
             fetchedResultsController!.managedObjectContext.delete(pin!)
+            self.delegate.stack.save()
         }else{
             self.coordinate = view.annotation?.coordinate
             self.performSegue(withIdentifier: "photoAlbum", sender: self)
@@ -268,14 +264,70 @@ extension TravelLocationsViewController: UIGestureRecognizerDelegate {
     func handleLongPress(_ gestureReconizer: UILongPressGestureRecognizer) {
         
         if !isDeletePin{
+            // coordinates of a point the user touched on the map
+            let location = gestureReconizer.location(in: self.mapView)
+            let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+            
+            switch gestureReconizer.state {
+                case .began:
+                    // create a pin
+                    self.droppedPin = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: (fetchedResultsController?.managedObjectContext)!)
+                    self.delegate.stack.save()
+                /* case .ended:
+                    // prefetch images
+                   FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.droppedPin?.latitude)!, longitude: (self.droppedPin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
+                        
+                        if let error = error{
+                            print("Something is wrong with download: \(error.description)")
+                        }else{
+                            let stack = self.delegate.stack
+                            
+                            if (result?.count)! > 0 {
+                                self.delegate.stack.performBackgroundBatchOperation({ (workerContext) in
+                                    for photoFlickr in result! {
+  
+                                         guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                                         return
+                                         }
+                                         
+                                         
+                                         FlickrClient.downloadImage(imagePath: imageURLString) { (data, error) in
+                                            if let error = error{
+                                                print("Something is wrong with download: \(error.description)")
+                                            }else{
+                                                print("descago Imagen")
+                                                let imageWithPlaceHolder = Photo(photoData: data as NSData?, photoUrl: imageURLString, context: stack.context)
+                                                imageWithPlaceHolder.pin = self.droppedPin
+                                         
+                                                //photo.photoData = data as NSData?
+                                            }
+                                         }
+                                    }
+                                })
+                            }
+                        }
+                    })*/
+
+                default:
+                    return
+                
+            }
+
+            
+            
+            
+            /*
             if gestureReconizer.state != UIGestureRecognizerState.ended {
                 return
             }
         
+            print("gestureReconizer state: \(gestureReconizer.state)")
             let location = gestureReconizer.location(in: self.mapView)
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
         
-            let _ = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: self.fetchedResultsController!.managedObjectContext)
+            let _ = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: (fetchedResultsController?.managedObjectContext)!)
+            self.delegate.stack.save()*/
+
         }
     }
 }
@@ -312,7 +364,6 @@ extension TravelLocationsViewController: NSFetchedResultsControllerDelegate {
                 case .delete:
                     let pinCoordinate = anObject as! Pin
                     let coordinate = CLLocationCoordinate2D(latitude: pinCoordinate.latitude, longitude: pinCoordinate.longitude)
-                    //self.mapView.removeAnnotation(annotation)
                 default:
                     break
             }
