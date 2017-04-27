@@ -60,7 +60,7 @@ extension CoreDataCollectionViewController : UICollectionViewDataSource {
         if let fc = fetchedResultsController {
             return fc.sections!.count
         } else {
-            return 1
+            return 0
         }
     }
     
@@ -69,7 +69,7 @@ extension CoreDataCollectionViewController : UICollectionViewDataSource {
         if let fc = fetchedResultsController {
             return fc.sections![section].numberOfObjects
         } else {
-            return 20
+            return 0
         }
     }
     

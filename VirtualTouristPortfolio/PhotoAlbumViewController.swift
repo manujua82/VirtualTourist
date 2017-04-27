@@ -68,20 +68,37 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 
                 
                 if (result?.count)! > 0 {
+                    
+                    
                 
                     stack.performBackgroundBatchOperation({ (workerContext) in
-                        let placeHolder  = UIImage(named: "placeholder")
-                        let data = UIImagePNGRepresentation(placeHolder!)! as NSData
-                        var photos = [Photo]()
-                    
                         for photoFlickr in result! {
+                            
+                           
+                             /*
+                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                                return
+                            }
+                            
+                           
+                            FlickrClient.downloadImage(imagePath: imageURLString) { (data, error) in
+                                if let error = error{
+                                    print("Something is wrong with download: \(error.description)")
+                                }else{
+                                    print("descago Imagen")
+                                    let imageWithPlaceHolder = Photo(photoData: data as NSData?, photoUrl: imageURLString, context: stack.context)
+                                    imageWithPlaceHolder.pin = self.pin!
+                                    
+                                    //photo.photoData = data as NSData?
+                                }
+                            }*/
+
                             
                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
                             }
-                            let imageWithPlaceHolder = Photo(photoData: data, photoUrl: imageURLString, context: stack.context)
+                            let imageWithPlaceHolder = Photo(photoData: nil, photoUrl: imageURLString, context: stack.context)
                             imageWithPlaceHolder.pin = self.pin!
-                            photos.append(imageWithPlaceHolder)
                         }
 
                         
@@ -102,8 +119,14 @@ extension PhotoAlbumViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCell", for: indexPath) as! PhotoAlbumCollectionViewCell
         
         // Configure the cell
+        
         let photo = fetchedResultsController?.object(at: indexPath) as! Photo
-        cell.imageView?.image = UIImage(data: (photo.photoData as? Data)!)
+        
+        if let photoData = photo.photoData as? Data {
+            cell.imageView?.image = UIImage(data: photoData)
+        }else{
+        }
+        
         
         return cell
     }
