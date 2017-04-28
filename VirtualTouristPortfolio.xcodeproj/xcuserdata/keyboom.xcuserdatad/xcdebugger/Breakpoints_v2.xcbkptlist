@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "VirtualTouristPortfolio/PhotoAlbumCollectionViewCell.swift"
-            timestampString = "515095529.500335"
+            timestampString = "515096975.377129"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
             landmarkName = "awakeFromNib()"
             landmarkType = "7">
          </BreakpointContent>

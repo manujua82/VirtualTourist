@@ -19,13 +19,15 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     var pin: Pin?
+    var selectedPhotos = [Photo]()
+    var isSelectCell: Bool = false {
+        didSet {
+            isSelectCell ? self.newCollectionButton.setTitle("Remove Selected Pictures", for: .normal) : self.newCollectionButton.setTitle( "New Collection", for: .normal)
+        }
+    }
+    
     let delegate = UIApplication.shared.delegate as! AppDelegate
-    
-    
 
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         noImageLabel.isHidden = true
@@ -48,16 +50,24 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     @IBAction func newCollectionButtonPressed(_ sender: Any) {
         
         // delete existing photos
-        noImageLabel.isHidden = true
-        newCollectionButton.isEnabled = false
-        for photo in fetchedResultsController?.fetchedObjects as! [Photo] {
-            fetchedResultsController!.managedObjectContext.delete(photo)
+        if !isSelectCell {
+            noImageLabel.isHidden = true
+            newCollectionButton.isEnabled = false
+            for photo in fetchedResultsController?.fetchedObjects as! [Photo] {
+                fetchedResultsController!.managedObjectContext.delete(photo)
+            }
+            delegate.stack.save()
+            downloadImages()
+        }else{
+            isSelectCell = false
         }
-        delegate.stack.save()
-        downloadImages()
     }
     
+    
+    
     func configureCollectionView(){
+        
+        self.isSelectCell = false
         
         self.collectionView?.allowsMultipleSelection = true
         self.collectionView?.selectItem(at: nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
@@ -148,17 +158,31 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
 extension PhotoAlbumViewController: UICollectionViewDelegate {
     
     
-    
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("didSelect")
+        
+        if !self.isSelectCell {
+            self.isSelectCell = true
+        }
+        
+        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        self.selectedPhotos.append(photo)
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print("deselect")
+        
+        let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        if let index = self.selectedPhotos.index(of: photo) {
+            self.selectedPhotos.remove(at: index)
+            print(" Cantidad Select: \(selectedPhotos.count)")
+            if self.selectedPhotos.count == 0 {
+                self.isSelectCell = false
+            }
+        }
     }
 
     

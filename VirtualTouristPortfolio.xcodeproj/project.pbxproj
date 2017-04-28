@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		95A389071EB2BA7400B63B32 /* IndicatorUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A389061EB2BA7400B63B32 /* IndicatorUIView.swift */; };
 		95F2D45F1EAF7C3000C26A82 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95F2D45E1EAF7C3000C26A82 /* AppDelegate.swift */; };
 		95F2D4641EAF7C3000C26A82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4621EAF7C3000C26A82 /* Main.storyboard */; };
 		95F2D4661EAF7C3000C26A82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95F2D4651EAF7C3000C26A82 /* Assets.xcassets */; };
@@ -27,7 +26,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		95A389061EB2BA7400B63B32 /* IndicatorUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorUIView.swift; sourceTree = "<group>"; };
 		95F2D45B1EAF7C3000C26A82 /* VirtualTouristPortfolio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTouristPortfolio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95F2D45E1EAF7C3000C26A82 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		95F2D4631EAF7C3000C26A82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -109,7 +107,6 @@
 		95F2D4721EAF7FFF00C26A82 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				95A389061EB2BA7400B63B32 /* IndicatorUIView.swift */,
 				95F2D48A1EAF924F00C26A82 /* TravelLocationsViewController.swift */,
 				95F2D48C1EB0097C00C26A82 /* PhotoAlbumViewController.swift */,
 				95F2D48E1EB0107E00C26A82 /* PhotoAlbumCollectionViewCell.swift */,
@@ -234,7 +231,6 @@
 				95F2D4931EB019BD00C26A82 /* FlickrClient.swift in Sources */,
 				95F2D4781EAF892600C26A82 /* CoreDataStack.swift in Sources */,
 				95F2D48B1EAF924F00C26A82 /* TravelLocationsViewController.swift in Sources */,
-				95A389071EB2BA7400B63B32 /* IndicatorUIView.swift in Sources */,
 				95F2D4961EB0C5AD00C26A82 /* CoreDataCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
