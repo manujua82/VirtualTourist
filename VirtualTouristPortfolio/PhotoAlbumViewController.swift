@@ -97,6 +97,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
                             }
+                            
                             let imageWithPlaceHolder = Photo(photoData: nil, photoUrl: imageURLString, context: stack.context)
                             imageWithPlaceHolder.pin = self.pin!
                         }
@@ -118,13 +119,20 @@ extension PhotoAlbumViewController {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCell", for: indexPath) as! PhotoAlbumCollectionViewCell
         
-        // Configure the cell
+        
         
         let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        // Configure the cell
+        cell.indicadorView = IndicatorUIView(frame: cell.imageView.frame)
+        cell.indicadorView.center =  cell.imageView.center
+        cell.imageView.addSubview(cell.indicadorView)
+        
         
         if let photoData = photo.photoData as? Data {
             cell.imageView?.image = UIImage(data: photoData)
+            cell.indicadorView.loadingView(false)
         }else{
+            cell.indicadorView.loadingView(true)
         }
         
         
