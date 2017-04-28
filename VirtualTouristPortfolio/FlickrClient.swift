@@ -153,16 +153,70 @@ class FlickrClient: NSObject {
                     return
                 }
                 
+                
+                
+                
+                /* GUARD: Is "pages" key in the photosDictionary? */
+                guard let totalPages = photosDictionary[FlickrResponseKeys.Pages] as? Int else {
+                    sendError(error: "Cannot find key \(FlickrResponseKeys.Pages) in \(photosDictionary)")
+                    return
+                }
+                
+                // pick a random page!
+                let pageLimit = min(totalPages, 40)
+                let randomPage = Int(arc4random_uniform(UInt32(pageLimit))) + 1
+                
+                self.displayImageFromFlickrBySearch(methodParameters as [String : AnyObject], withPageNumber: randomPage, completionHandlerForImageFromFlickrBySearch: completionHandlerForGetPhotosByLocation)
+
+                
+            }
+
+        }
+    }
+    
+    func displayImageFromFlickrBySearch(_ methodParameters: [String: AnyObject], withPageNumber: Int,  completionHandlerForImageFromFlickrBySearch: @escaping (_ result: [[String: AnyObject]]?, _ error: NSError?) -> Void) {
+        
+        // add the page to the method's parameters
+        var methodParametersWithPageNumber = methodParameters
+        methodParametersWithPageNumber[FlickrParameterKeys.Page] = withPageNumber as AnyObject?
+        
+        let _ = taskForGETMethod(methodParametersWithPageNumber as [String : AnyObject]) { (result, error) in
+            
+            if let errorMessage = error {
+                completionHandlerForImageFromFlickrBySearch(nil,errorMessage)
+                
+            }else{
+                func sendError(error: String) {
+                    let userInfo = [NSLocalizedDescriptionKey : error]
+                    completionHandlerForImageFromFlickrBySearch(nil,NSError(domain: "getPhotoByLocation", code: 1, userInfo: userInfo))
+                }
+                
+                guard let dictionary = result as? [String: Any] else {
+                    sendError(error: "Cannot Parse Dictionary")
+                    return
+                }
+                
+                /* GUARD: Did Flickr return an error (stat != ok)? */
+                guard let stat = dictionary[FlickrResponseKeys.Status] as? String, stat == FlickrResponseValues.OKStatus else {
+                    sendError(error: "Flickr API returned an error. See error code and message in \(dictionary)")
+                    return
+                }
+                
+                /* GUARD: Is "photos" key in our result? */
+                guard let photosDictionary = dictionary[FlickrResponseKeys.Photos] as? [String:AnyObject] else {
+                    sendError(error: "Cannot find keys '\(FlickrResponseKeys.Photos)' in \(dictionary)")
+                    return
+                }
+                
                 /* GUARD: Is the "photo" key in photosDictionary? */
                 guard let photosArray = photosDictionary[FlickrResponseKeys.Photo] as? [[String: AnyObject]] else {
                     sendError(error: "Cannot find key '\(FlickrResponseKeys.Photo)' in \(photosDictionary)")
                     return
                 }
                 
-                completionHandlerForGetPhotosByLocation(photosArray,nil)
+                completionHandlerForImageFromFlickrBySearch(photosArray,nil)
                 
             }
-
         }
     }
     
