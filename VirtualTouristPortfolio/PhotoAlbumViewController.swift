@@ -60,6 +60,11 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             downloadImages()
         }else{
             isSelectCell = false
+            for photo in selectedPhotos{
+                fetchedResultsController!.managedObjectContext.delete(photo)
+            }
+            selectedPhotos.removeAll()
+            delegate.stack.save()
         }
     }
     
@@ -113,23 +118,13 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 if (result?.count)! > 0 {
                     stack.performBackgroundBatchOperation({ (workerContext) in
                         for photoFlickr in result! {
-                             /*
-                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                            /*
+                            guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
                             }
                             
                            
-                            FlickrClient.downloadImage(imagePath: imageURLString) { (data, error) in
-                                if let error = error{
-                                    print("Something is wrong with download: \(error.description)")
-                                }else{
-                                    print("descago Imagen")
-                                    let imageWithPlaceHolder = Photo(photoData: data as NSData?, photoUrl: imageURLString, context: stack.context)
-                                    imageWithPlaceHolder.pin = self.pin!
-                                    
-                                    //photo.photoData = data as NSData?
-                                }
-                            }*/
+                            */
 
                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
