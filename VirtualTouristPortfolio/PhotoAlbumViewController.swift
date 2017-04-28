@@ -179,8 +179,9 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
         
         if let photoData = photo.photoData as? Data {
             cell.imageView?.image = UIImage(data: photoData)
-            
+            cell.indicator.stopAnimating()
         }else{
+            cell.indicator.startAnimating()
             
         }
         
