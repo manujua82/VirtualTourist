@@ -10,10 +10,8 @@ import UIKit
 import CoreData
 
 class CoreDataCollectionViewController: UIViewController{
-
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
     var blockOperations: [BlockOperation] = []
     
     // MARK: Properties
@@ -33,8 +31,6 @@ class CoreDataCollectionViewController: UIViewController{
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-   
 }
 
 // MARK: - executeSearch CoreDataCollectionViewController
@@ -86,7 +82,6 @@ extension CoreDataCollectionViewController : UICollectionViewDataSource {
 // MARK: - CoreDataTableViewController: NSFetchedResultsControllerDelegate
 
 extension CoreDataCollectionViewController: NSFetchedResultsControllerDelegate {
-    
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch(type){

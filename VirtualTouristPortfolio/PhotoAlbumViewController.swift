@@ -118,14 +118,6 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 if (result?.count)! > 0 {
                     stack.performBackgroundBatchOperation({ (workerContext) in
                         for photoFlickr in result! {
-                            /*
-                            guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
-                                return
-                            }
-                            
-                           
-                            */
-
                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
                             }
@@ -196,11 +188,29 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
      
         
         
-        if let photoData = photo.photoData as? Data {
-            cell.imageView?.image = UIImage(data: photoData)
+        //if let photoData = photo.photoData as? Data {
+        if photo.url == "" {
+            //cell.imageView?.image = UIImage(data: photoData)
+            print("Stop indicator")
             cell.indicator.stopAnimating()
+            cell.indicator.isHidden = true
         }else{
+            cell.indicator.isHidden = false
             cell.indicator.startAnimating()
+            FlickrClient.downloadImage(imagePath: photo.url!) { (data, error) in
+                if let error = error{
+                    print("Something is wrong with download: \(error.description)")
+                }else{
+                    print("Image Downloaded")
+                    DispatchQueue.main.async {
+                        //photo.photoData = data as NSData?
+                            //cell.imageView?.image = UIImage(data: data!)
+                            //photo.url = ""
+                            self.delegate.stack.save()
+                        }
+                    }
+                }
+            }
             
         }
         
