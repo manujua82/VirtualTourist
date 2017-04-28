@@ -95,7 +95,6 @@ class FlickrClient: NSObject {
             components.queryItems!.append(queryItem)
         }
         
-        print("url flick: \(components.url?.absoluteString)")
         return components.url!
     }
     
@@ -153,9 +152,6 @@ class FlickrClient: NSObject {
                     return
                 }
                 
-                
-                
-                
                 /* GUARD: Is "pages" key in the photosDictionary? */
                 guard let totalPages = photosDictionary[FlickrResponseKeys.Pages] as? Int else {
                     sendError(error: "Cannot find key \(FlickrResponseKeys.Pages) in \(photosDictionary)")
@@ -167,8 +163,6 @@ class FlickrClient: NSObject {
                 let randomPage = Int(arc4random_uniform(UInt32(pageLimit))) + 1
                 
                 self.displayImageFromFlickrBySearch(methodParameters as [String : AnyObject], withPageNumber: randomPage, completionHandlerForImageFromFlickrBySearch: completionHandlerForGetPhotosByLocation)
-
-                
             }
 
         }
@@ -241,7 +235,4 @@ class FlickrClient: NSObject {
         
         task.resume()
     }
-
-    
-   
 }

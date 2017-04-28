@@ -14,27 +14,62 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
 
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var newCollectionButton: UIButton!
+    @IBOutlet weak var noImageLabel: UILabel!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
     var pin: Pin?
     let delegate = UIApplication.shared.delegate as! AppDelegate
     
+    
+
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        noImageLabel.isHidden = true
         
         configureMap()
+        configureCollectionView()
         
         guard let album = pin?.photos else {
             print("no exite photos")
             return
         }
         
-        print("photos: \(album.count)")
         if album.count == 0 {
+            newCollectionButton.isEnabled = false
             downloadImages()
         }
     }
     
    
+    @IBAction func newCollectionButtonPressed(_ sender: Any) {
+        
+        // delete existing photos
+        noImageLabel.isHidden = true
+        newCollectionButton.isEnabled = false
+        for photo in fetchedResultsController?.fetchedObjects as! [Photo] {
+            fetchedResultsController!.managedObjectContext.delete(photo)
+        }
+        delegate.stack.save()
+        downloadImages()
+    }
+    
+    func configureCollectionView(){
+        
+        self.collectionView?.allowsMultipleSelection = true
+        self.collectionView?.selectItem(at: nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
+        
+        let space:CGFloat = 3.0
+        let dimension = (view.frame.size.width - (2 * space)) / 3.0
+        
+        self.flowLayout.minimumInteritemSpacing = 0
+        self.flowLayout.minimumLineSpacing = space
+        self.flowLayout.itemSize = CGSize(width: dimension, height: dimension)
+    }
+    
     func configureMap(){
         
         mapView.isScrollEnabled = false
@@ -65,16 +100,9 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 print("Something is wrong with download: \(error.description)")
             }else{
                 let stack = self.delegate.stack
-                
-                
                 if (result?.count)! > 0 {
-                    
-                    
-                
                     stack.performBackgroundBatchOperation({ (workerContext) in
                         for photoFlickr in result! {
-                            
-                           
                              /*
                              guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
@@ -93,17 +121,21 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                                 }
                             }*/
 
-                            
                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
                             }
                             
                             let imageWithPlaceHolder = Photo(photoData: nil, photoUrl: imageURLString, context: stack.context)
                             imageWithPlaceHolder.pin = self.pin!
+                            self.delegate.stack.save()
                         }
-
-                        
                     })
+                    
+                    DispatchQueue.main.async {
+                        self.newCollectionButton.isEnabled = true
+                    }
+                }else{
+                    self.noImageLabel.isHidden = false
                 }
                 
             }
@@ -112,8 +144,23 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     } 
 }
 
-// MARK: - PhotoAlbumViewController (Collection Data Source)
-extension PhotoAlbumViewController {
+// MARK: - PhotoAlbumViewController (Collection Data Source, UICollectionViewDelegate)
+extension PhotoAlbumViewController: UICollectionViewDelegate {
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("didSelect")
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        print("deselect")
+    }
+
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -122,17 +169,19 @@ extension PhotoAlbumViewController {
         
         
         let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+        
+        
         // Configure the cell
-        cell.indicadorView = IndicatorUIView(frame: cell.imageView.frame)
-        cell.indicadorView.center =  cell.imageView.center
-        cell.imageView.addSubview(cell.indicadorView)
+        cell.imageView.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin, .flexibleWidth]
+        cell.imageView.contentMode = .scaleAspectFill
+     
         
         
         if let photoData = photo.photoData as? Data {
             cell.imageView?.image = UIImage(data: photoData)
-            cell.indicadorView.loadingView(false)
+            
         }else{
-            cell.indicadorView.loadingView(true)
+            
         }
         
         

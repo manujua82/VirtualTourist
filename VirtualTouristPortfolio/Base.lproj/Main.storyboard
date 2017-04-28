@@ -95,6 +95,7 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Sdf-WV-RFM">
                                 <rect key="frame" x="-4" y="64" width="383" height="200"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="HSm-es-LOk"/>
                                 </constraints>
@@ -108,6 +109,13 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
+                                <label key="backgroundView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This pin has no images." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qJW-FI-ywM">
+                                    <rect key="frame" x="0.0" y="0.0" width="383" height="343"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoAlbumCell" id="X96-Ah-Zfn" customClass="PhotoAlbumCollectionViewCell" customModule="VirtualTouristPortfolio" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="91" height="75"/>
@@ -120,10 +128,18 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="91" height="75"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6lS-DH-6dd">
+                                                    <rect key="frame" x="35" y="27" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
+                                        <constraints>
+                                            <constraint firstItem="6lS-DH-6dd" firstAttribute="centerY" secondItem="X96-Ah-Zfn" secondAttribute="centerY" id="C9P-3F-iJ5"/>
+                                            <constraint firstItem="6lS-DH-6dd" firstAttribute="centerX" secondItem="X96-Ah-Zfn" secondAttribute="centerX" id="TD0-7B-6Sp"/>
+                                        </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="5CJ-9s-E6j" id="0cs-Fp-fPH"/>
+                                            <outlet property="indicator" destination="6lS-DH-6dd" id="b2H-iS-CAQ"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -139,6 +155,9 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="newCollectionButtonPressed:" destination="qeh-7h-bu7" eventType="touchUpInside" id="Rhx-XL-TFx"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -157,7 +176,10 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="YcA-T8-YYo" id="Hd8-kf-ejh"/>
+                        <outlet property="flowLayout" destination="l3w-0i-Azs" id="pb4-Xm-Fs1"/>
                         <outlet property="mapView" destination="Sdf-WV-RFM" id="KGm-kt-1ku"/>
+                        <outlet property="newCollectionButton" destination="o3N-nS-w5s" id="ftK-iH-Eqd"/>
+                        <outlet property="noImageLabel" destination="qJW-FI-ywM" id="ASM-jT-dTc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="raB-FY-rzN" userLabel="First Responder" sceneMemberID="firstResponder"/>

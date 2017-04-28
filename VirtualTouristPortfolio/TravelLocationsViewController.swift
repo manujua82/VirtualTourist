@@ -273,61 +273,11 @@ extension TravelLocationsViewController: UIGestureRecognizerDelegate {
                     // create a pin
                     self.droppedPin = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: (fetchedResultsController?.managedObjectContext)!)
                     self.delegate.stack.save()
-                /* case .ended:
-                    // prefetch images
-                   FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.droppedPin?.latitude)!, longitude: (self.droppedPin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
-                        
-                        if let error = error{
-                            print("Something is wrong with download: \(error.description)")
-                        }else{
-                            let stack = self.delegate.stack
-                            
-                            if (result?.count)! > 0 {
-                                self.delegate.stack.performBackgroundBatchOperation({ (workerContext) in
-                                    for photoFlickr in result! {
-  
-                                         guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
-                                         return
-                                         }
-                                         
-                                         
-                                         FlickrClient.downloadImage(imagePath: imageURLString) { (data, error) in
-                                            if let error = error{
-                                                print("Something is wrong with download: \(error.description)")
-                                            }else{
-                                                print("descago Imagen")
-                                                let imageWithPlaceHolder = Photo(photoData: data as NSData?, photoUrl: imageURLString, context: stack.context)
-                                                imageWithPlaceHolder.pin = self.droppedPin
-                                         
-                                                //photo.photoData = data as NSData?
-                                            }
-                                         }
-                                    }
-                                })
-                            }
-                        }
-                    })*/
-
+            
                 default:
                     return
                 
             }
-
-            
-            
-            
-            /*
-            if gestureReconizer.state != UIGestureRecognizerState.ended {
-                return
-            }
-        
-            print("gestureReconizer state: \(gestureReconizer.state)")
-            let location = gestureReconizer.location(in: self.mapView)
-            let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        
-            let _ = Pin(latitude: coordinate.latitude, longitude: coordinate.longitude, context: (fetchedResultsController?.managedObjectContext)!)
-            self.delegate.stack.save()*/
-
         }
     }
 }

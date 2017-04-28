@@ -44,7 +44,7 @@ extension FlickrClient{
         static let DisableJSONCallback = "1" /* 1 means "yes" */
         static let MediumURL = "url_m"
         static let UseSafeSearch = "1"
-        static let PerPage = "20"
+        static let PerPage = "30"
     }
     
     // MARK: Flickr Response Keys

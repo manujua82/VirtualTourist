@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class CoreDataCollectionViewController: UIViewController {
+class CoreDataCollectionViewController: UIViewController{
 
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -34,6 +34,7 @@ class CoreDataCollectionViewController: UIViewController {
         super.init(coder: aDecoder)
     }
     
+   
 }
 
 // MARK: - executeSearch CoreDataCollectionViewController
@@ -76,6 +77,8 @@ extension CoreDataCollectionViewController : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         fatalError("This method MUST be implemented by a subclass of CoreDataTableViewController")
     }
+    
+
     
 }
 
