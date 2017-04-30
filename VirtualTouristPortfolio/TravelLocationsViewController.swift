@@ -107,7 +107,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
         
         
         // Create FetchedResultsController
-        let fc = NSFetchedResultsController(fetchRequest: pins, managedObjectContext:fetchedResultsController!.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        let fc = NSFetchedResultsController(fetchRequest: pins, managedObjectContext:self.delegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
         do {
             try fc.performFetch()
@@ -139,7 +139,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
                 let pred = NSPredicate(format: "pin = %@", argumentArray: [pin])
                 fr.predicate = pred
                 
-                let fc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext:fetchedResultsController!.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+                let fc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext:self.delegate.stack.context, sectionNameKeyPath: nil, cacheName: nil)
                 
                 controller.pin = pin
                 controller.fetchedResultsController = fc

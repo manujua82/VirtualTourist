@@ -111,34 +111,40 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
         
         FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
             
-            if let error = error{
-                print("Something is wrong with download: \(error.description)")
-            }else{
-                let stack = self.delegate.stack
-                if (result?.count)! > 0 {
-                    stack.performBackgroundBatchOperation({ (workerContext) in
-                        for photoFlickr in result! {
-                            guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
-                                return
-                            }
-                            
-                            let imageWithPlaceHolder = Photo(photoData: nil, photoUrl: imageURLString, context: stack.context)
-                            imageWithPlaceHolder.pin = self.pin!
-                            self.delegate.stack.save()
-                        }
-                    })
+                if let error = error{
+                    print("Something is wrong with download: \(error.description)")
+                }else{
+                
+                    if (result?.count)! > 0 {
+                        DispatchQueue.main.async {
+                            let stack = self.delegate.stack
+                            stack.performBackgroundBatchOperation { (workerContext) in
+                                //let newPin = Pin(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, context: workerContext)
                     
-                    DispatchQueue.main.async {
+                                for photoFlickr in result! {
+                                    guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                                        return
+                                    }
+                                    let imageWithPlaceHolder = Photo(photoData: nil, photoUrl: imageURLString, context: stack.context)
+                                    imageWithPlaceHolder.pin = self.pin
+                                    print("url: \(imageURLString)")
+                                }
+                                print("finished background:wq")
+                            }
+                        }
+                    
+                        DispatchQueue.main.async {
+                            self.newCollectionButton.isEnabled = true
+                        }
+                    }else{
+                        self.noImageLabel.isHidden = false
                         self.newCollectionButton.isEnabled = true
                     }
-                }else{
-                    self.noImageLabel.isHidden = false
-                }
                 
-            }
+                }
             
         })
-    } 
+    }
 }
 
 // MARK: - PhotoAlbumViewController (Collection Data Source, UICollectionViewDelegate)
@@ -188,6 +194,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
      
         
         
+        
         //if let photoData = photo.photoData as? Data {
         if photo.url == "" {
             //cell.imageView?.image = UIImage(data: photoData)
@@ -202,13 +209,12 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
                     print("Something is wrong with download: \(error.description)")
                 }else{
                     print("Image Downloaded")
-                    DispatchQueue.main.async {
-                        //photo.photoData = data as NSData?
-                            //cell.imageView?.image = UIImage(data: data!)
-                            //photo.url = ""
-                            self.delegate.stack.save()
-                        }
-                    }
+                    //DispatchQueue.main.async {
+                        photo.photoData = data as NSData?
+                        photo.url = ""
+                        self.delegate.stack.save()
+                        
+                    //}
                 }
             }
             
