@@ -184,7 +184,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
     
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("didSlect")
+    
         
         var pin: Pin?
         
@@ -217,6 +217,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
             fetchedResultsController!.managedObjectContext.delete(pin!)
             self.delegate.stack.save()
         }else{
+            self.mapView.deselectAnnotation(view.annotation, animated: false)
             self.coordinate = view.annotation?.coordinate
             self.performSegue(withIdentifier: "photoAlbum", sender: self)
         }

@@ -46,6 +46,10 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        delegate.stack.save()
+    }
+    
    
     @IBAction func newCollectionButtonPressed(_ sender: Any) {
         
@@ -56,7 +60,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             for photo in fetchedResultsController?.fetchedObjects as! [Photo] {
                 fetchedResultsController!.managedObjectContext.delete(photo)
             }
-            delegate.stack.save()
+            //delegate.stack.save()
             downloadImages()
         }else{
             isSelectCell = false
@@ -64,7 +68,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 fetchedResultsController!.managedObjectContext.delete(photo)
             }
             selectedPhotos.removeAll()
-            delegate.stack.save()
+            //delegate.stack.save()
         }
     }
     
@@ -75,7 +79,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
         self.isSelectCell = false
         
         self.collectionView?.allowsMultipleSelection = true
-        self.collectionView?.selectItem(at: nil, animated: true, scrollPosition: UICollectionViewScrollPosition())
+        self.collectionView?.selectItem(at: nil, animated: false, scrollPosition: UICollectionViewScrollPosition())
         
         let space:CGFloat = 3.0
         let dimension = (view.frame.size.width - (2 * space)) / 3.0
@@ -117,12 +121,12 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 if (result?.count)! > 0 {
                     stack.performBackgroundBatchOperation({ (workerContext) in
                         for photoFlickr in result! {
+                            
                             guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                 return
                             }
                             
                             _ = Photo(photoData: nil, photoUrl: imageURLString, pin: self.pin!, context: stack.context)
-                            self.delegate.stack.save()
                         }
                     })
                     
@@ -186,12 +190,15 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
         
         
         if let photoData = photo.photoData as? Data {
-            //cell.imageView?.image = UIImage(data: photoData)
+            cell.imageView.image = UIImage(data: photoData)
             cell.indicator.stopAnimating()
             cell.indicator.isHidden = true
         }else{
+            cell.imageView.image = UIImage(named: "placeholder")
             cell.indicator.isHidden = false
             cell.indicator.startAnimating()
+            
+            
             
             FlickrClient.downloadImage(imagePath: photo.url!) { (data, error) in
                 if let error = error{
@@ -200,7 +207,11 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
                     
                     DispatchQueue.main.async {
                         photo.photoData = data as NSData?
-                        self.delegate.stack.save()
+                        photo.url =  photo.url!
+                        
+                        
+                        print("photo: \(photo)")
+                        //self.delegate.stack.save()
                     }
                 }
             }
