@@ -108,40 +108,32 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     
     
     func downloadImages(){
-        
         FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
             
-                if let error = error{
-                    print("Something is wrong with download: \(error.description)")
-                }else{
-                
-                    if (result?.count)! > 0 {
-                        DispatchQueue.main.async {
-                            let stack = self.delegate.stack
-                            stack.performBackgroundBatchOperation { (workerContext) in
-                                //let newPin = Pin(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, context: workerContext)
-                    
-                                for photoFlickr in result! {
-                                    guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
-                                        return
-                                    }
-                                    let imageWithPlaceHolder = Photo(photoData: nil, photoUrl: imageURLString, context: stack.context)
-                                    imageWithPlaceHolder.pin = self.pin
-                                    print("url: \(imageURLString)")
-                                }
-                                print("finished background:wq")
+            if let error = error{
+                print("Something is wrong with download: \(error.description)")
+            }else{
+                let stack = self.delegate.stack
+                if (result?.count)! > 0 {
+                    stack.performBackgroundBatchOperation({ (workerContext) in
+                        for photoFlickr in result! {
+                            guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                                return
                             }
+                            
+                            _ = Photo(photoData: nil, photoUrl: imageURLString, pin: self.pin!, context: stack.context)
+                            self.delegate.stack.save()
                         }
+                    })
                     
-                        DispatchQueue.main.async {
-                            self.newCollectionButton.isEnabled = true
-                        }
-                    }else{
-                        self.noImageLabel.isHidden = false
+                    DispatchQueue.main.async {
                         self.newCollectionButton.isEnabled = true
                     }
-                
+                }else{
+                    self.noImageLabel.isHidden = false
                 }
+                
+            }
             
         })
     }
@@ -180,7 +172,6 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
 
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCell", for: indexPath) as! PhotoAlbumCollectionViewCell
         
         
@@ -191,37 +182,31 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
         // Configure the cell
         cell.imageView.autoresizingMask = [.flexibleBottomMargin, .flexibleHeight, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin, .flexibleWidth]
         cell.imageView.contentMode = .scaleAspectFill
-     
         
         
         
-        //if let photoData = photo.photoData as? Data {
-        if photo.url == "" {
+        if let photoData = photo.photoData as? Data {
             //cell.imageView?.image = UIImage(data: photoData)
-            print("Stop indicator")
             cell.indicator.stopAnimating()
             cell.indicator.isHidden = true
         }else{
             cell.indicator.isHidden = false
             cell.indicator.startAnimating()
+            
             FlickrClient.downloadImage(imagePath: photo.url!) { (data, error) in
                 if let error = error{
                     print("Something is wrong with download: \(error.description)")
                 }else{
-                    print("Image Downloaded")
-                    //DispatchQueue.main.async {
+                    
+                    DispatchQueue.main.async {
                         photo.photoData = data as NSData?
-                        photo.url = ""
                         self.delegate.stack.save()
-                        
-                    //}
+                    }
                 }
             }
-            
         }
-        
-        
         return cell
+    
     }
 }
 

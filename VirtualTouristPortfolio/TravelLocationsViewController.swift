@@ -133,7 +133,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
                 
                 // Create a fetchrequest
                 let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-                fr.sortDescriptors = [NSSortDescriptor(key: "photoData", ascending: false)]
+                fr.sortDescriptors = [NSSortDescriptor(key: "url", ascending: false)]
                 
                 // Create the FetchedResultsController
                 let pred = NSPredicate(format: "pin = %@", argumentArray: [pin])
