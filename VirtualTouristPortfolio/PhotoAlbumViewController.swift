@@ -59,8 +59,9 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
             newCollectionButton.isEnabled = false
             for photo in fetchedResultsController?.fetchedObjects as! [Photo] {
                 fetchedResultsController!.managedObjectContext.delete(photo)
+                
             }
-            //delegate.stack.save()
+            delegate.stack.save()
             downloadImages()
         }else{
             isSelectCell = false
@@ -68,7 +69,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 fetchedResultsController!.managedObjectContext.delete(photo)
             }
             selectedPhotos.removeAll()
-            //delegate.stack.save()
+            delegate.stack.save()
         }
     }
     
@@ -112,34 +113,37 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     
     
     func downloadImages(){
-        FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
+        
+        DispatchQueue.main.async {
+            FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
             
-            if let error = error{
-                print("Something is wrong with download: \(error.description)")
-            }else{
-                let stack = self.delegate.stack
-                if (result?.count)! > 0 {
-                    stack.performBackgroundBatchOperation({ (workerContext) in
-                        for photoFlickr in result! {
-                            
-                            guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
-                                return
-                            }
-                            
-                            _ = Photo(photoData: nil, photoUrl: imageURLString, pin: self.pin!, context: stack.context)
-                        }
-                    })
-                    
-                    DispatchQueue.main.async {
-                        self.newCollectionButton.isEnabled = true
-                    }
+                if let error = error{
+                    print("Something is wrong with download: \(error.description)")
                 }else{
-                    self.noImageLabel.isHidden = false
+                    let stack = self.delegate.stack
+                    if (result?.count)! > 0 {
+                        stack.performBackgroundBatchOperation({ (workerContext) in
+                            for photoFlickr in result! {
+                                guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                                        return
+                                    }
+                            
+                                    _ = Photo(photoData: nil, photoUrl: imageURLString, pin: self.pin!, context: stack.context)
+                            
+                            
+                            }
+                            stack.save()
+                        })
+                        DispatchQueue.main.async {
+                            self.newCollectionButton.isEnabled = true
+                        }
+                    }else{
+                        self.noImageLabel.isHidden = false
+                        self.newCollectionButton.isEnabled = false
+                    }
                 }
-                
-            }
-            
-        })
+            })
+        }
     }
 }
 
@@ -207,11 +211,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
                     
                     DispatchQueue.main.async {
                         photo.photoData = data as NSData?
-                        photo.url =  photo.url!
-                        
-                        
-                        print("photo: \(photo)")
-                        //self.delegate.stack.save()
+                        self.delegate.stack.save()
                     }
                 }
             }

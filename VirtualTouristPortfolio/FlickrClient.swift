@@ -159,7 +159,7 @@ class FlickrClient: NSObject {
                 }
                 
                 // pick a random page!
-                let pageLimit = min(totalPages, 40)
+                let pageLimit = min(totalPages, Flickr.MaximumNumberOfPages)
                 let randomPage = Int(arc4random_uniform(UInt32(pageLimit))) + 1
                 
                 self.displayImageFromFlickrBySearch(methodParameters as [String : AnyObject], withPageNumber: randomPage, completionHandlerForImageFromFlickrBySearch: completionHandlerForGetPhotosByLocation)
