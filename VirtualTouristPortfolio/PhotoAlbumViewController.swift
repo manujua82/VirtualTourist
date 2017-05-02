@@ -114,7 +114,7 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
     
     func downloadImages(){
         
-        DispatchQueue.main.async {
+       
             FlickrClient.sharedInstance().getPhotosByLocation(latitude: (self.pin?.latitude)!, longitude: (self.pin?.longitude)!, completionHandlerForGetPhotosByLocation: { (result, error) in
             
                 if let error = error{
@@ -122,28 +122,33 @@ class PhotoAlbumViewController: CoreDataCollectionViewController {
                 }else{
                     let stack = self.delegate.stack
                     if (result?.count)! > 0 {
-                        stack.performBackgroundBatchOperation({ (workerContext) in
-                            for photoFlickr in result! {
-                                guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
+                       
+                            stack.performBackgroundBatchOperation({ (workerContext) in
+                                for photoFlickr in result! {
+                                    guard let imageURLString = photoFlickr[FlickrClient.FlickrResponseKeys.MediumURL] as? String else {
                                         return
                                     }
+                                    
+                                    DispatchQueue.main.async {
+                                        _ = Photo(photoData: nil, photoUrl: imageURLString, pin: self.pin!, context: stack.context)
+                                    }
                             
-                                    _ = Photo(photoData: nil, photoUrl: imageURLString, pin: self.pin!, context: stack.context)
                             
-                            
-                            }
-                            stack.save()
-                        })
+                                }
+                                stack.save()
+                            })
+                        
                         DispatchQueue.main.async {
                             self.newCollectionButton.isEnabled = true
                         }
+                        
                     }else{
                         self.noImageLabel.isHidden = false
                         self.newCollectionButton.isEnabled = false
                     }
                 }
             })
-        }
+        
     }
 }
 

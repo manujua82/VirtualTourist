@@ -217,7 +217,7 @@ extension TravelLocationsViewController: MKMapViewDelegate{
             fetchedResultsController!.managedObjectContext.delete(pin!)
             self.delegate.stack.save()
         }else{
-            self.mapView.deselectAnnotation(view.annotation, animated: false)
+            self.mapView.deselectAnnotation(view.annotation, animated: true)
             self.coordinate = view.annotation?.coordinate
             self.performSegue(withIdentifier: "photoAlbum", sender: self)
         }
