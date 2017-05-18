@@ -18,7 +18,7 @@ The app will have two view controller scenes.
 
 
 ## Screenshot 
-![Alt text](/ScreenShot/screenshot.jpg?raw=true "") 
+![Alt text](/ScreenShot/screenshot.png?raw=true "") 
 
 ## License
 The contents of this repository are covered under the [MIT License](LICENSE).
